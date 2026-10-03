@@ -1,0 +1,32 @@
+{
+  "name": "whnotify",
+  "version": "1.0.0",
+  "description": "webhook something",
+  "scripts": {
+    "dev": "tsx watch main.ts",
+    "build": "tsc",
+    "start": "node dist/main.js"
+  },
+  "keywords": [],
+  "author": "solitaire83",
+  "license": "ISC",
+  "devEngines": {
+    "packageManager": {
+      "name": "pnpm",
+      "version": "12.8.1",
+      "onFail": "download"
+    }
+  },
+  "packageManager": "pnpm@12.8.1",
+  "type": "module",
+  "devDependencies": {
+    "@types/node": "^26.6.4",
+    "tsx": "^4.23.15",
+    "typescript": "^7.0.2"
+  },
+  "dependencies": {
+    "dotenv": "^18.0.5",
+    "fastify": "^5.12.5",
+    "zod": "^4.6.5"
+  }
+}
