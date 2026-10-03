@@ -1,0 +1,1 @@
+// console.interface.ts
