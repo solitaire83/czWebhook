@@ -38,8 +38,10 @@ function pushEmbed(payload: GithubPush): DiscordEmbedType | null {
 
     const branch = payload.ref.replace("refs/heads/", "");
     const count = payload.commits.length;
+    const authorName = (commit: GithubPush["commits"][number]) => commit.author.username ?? commit.author.name;
+    const multipleAuthors = new Set(payload.commits.map((commit) => commit.author.username ?? commit.author.email)).size > 1;
     const commits = payload.commits.slice(0, 5).map((commit) =>
-        `[\`${commit.id.slice(0, 7)}\`](${commit.url}) ${commit.message.split("\n")[0]} - ${commit.author.username ?? commit.author.name}`
+        `[\`${commit.id.slice(0, 7)}\`](${commit.url}) ${commit.message.split("\n")[0]}${multipleAuthors ? ` - ${authorName(commit)}` : ""}`
     );
 
     return {

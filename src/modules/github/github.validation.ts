@@ -18,7 +18,7 @@ export type GithubPush = {
     deleted: boolean;
     repository: Repository;
     sender: Sender;
-    commits: { id: string; message: string; url: string; author: { name: string; username?: string } }[];
+    commits: { id: string; message: string; url: string; author: { name: string; email: string; username?: string } }[];
 };
 
 export type GithubCreate = {
