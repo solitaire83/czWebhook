@@ -1,6 +1,4 @@
 // main.ts
 
-import { BANNER } from "./src/interface/banner.interface.ts";
-BANNER();
-
+await import ("./src/interface/banner.interface.ts");
 await import ("./src/core/fastify.ts");
