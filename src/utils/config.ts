@@ -17,6 +17,9 @@ const schema = z.object({
     
   GITHUB_WEBHOOK_SECRET: z.string().min(1),
   DISCORD_WEBHOOK_SECRET: z.url(),
+
+  RATE_LIMIT_MAX: z.coerce.number().int().positive().default(30),
+  RATE_LIMIT_WINDOW: z.coerce.number().int().positive().default(60000), // ms
 });
 
 const parsed = schema.safeParse(process.env);
