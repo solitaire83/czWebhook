@@ -1,23 +1,12 @@
-import { GithubCheckRun, GithubCheckSuite, GithubCreate, GithubPush, GithubRelease } from "./github.validation.ts";
-import { SendDiscordMessage } from "../discord/discord.service.ts";
+import { GithubCheckRun, GithubCheckSuite, GithubCreate, GithubPush, GithubRelease, Sender } from "./github.validation.ts";
+import { SendDiscordEmbed } from "../discord/discord.service.ts";
 import { DiscordEmbedType } from "../discord/discord.validation.ts";
-import { createHmac, timingSafeEqual } from "node:crypto";
+import { verifyHmacSignature } from "../../core/funcs/signature.ts";
+import { COLORS } from "../../interface/discord.interface.ts";
 import config from "../../utils/config.ts";
 
-const COLORS = {
-    commit: 0x7289da,
-    success: 0x00a000,
-    failure: 0xfc2929,
-    other: 0x99aab5,
-};
-
 export function verifyGithubSignature(rawBody: Buffer, signature: string | undefined): boolean {
-    if (!signature) return false;
-
-    const expected = Buffer.from("sha256=" + createHmac("sha256", config.GITHUB_WEBHOOK_SECRET).update(rawBody).digest("hex"));
-    const received = Buffer.from(signature);
-
-    return expected.length === received.length && timingSafeEqual(expected, received);
+    return verifyHmacSignature(config.GITHUB_WEBHOOK_SECRET, rawBody, signature);
 }
 
 export async function handleGithub(event: string, payload: any) {
@@ -31,13 +20,17 @@ export async function handleGithub(event: string, payload: any) {
         case "check_suite": embed = checkSuiteEmbed(payload); break;
     }
 
-    if (embed) await SendDiscordMessage(config.DISCORD_WEBHOOK_SECRET, { embeds: [embed] });
+    if (embed) await SendDiscordEmbed(embed);
+}
+
+function senderAuthor(sender: Sender): DiscordEmbedType["author"] {
+    return { name: sender.login, url: sender.html_url, icon_url: sender.avatar_url };
 }
 
 function conclusionColor(conclusion: string) {
     if (conclusion === "success") return COLORS.success;
     if (conclusion === "failure" || conclusion === "timed_out") return COLORS.failure;
-    return COLORS.other;
+    return COLORS.neutral;
 }
 
 function pushEmbed(payload: GithubPush): DiscordEmbedType | null {
@@ -50,17 +43,17 @@ function pushEmbed(payload: GithubPush): DiscordEmbedType | null {
     );
 
     return {
-        author: { name: payload.sender.login, url: payload.sender.html_url, icon_url: payload.sender.avatar_url },
+        author: senderAuthor(payload.sender),
         title: `[${payload.repository.name}:${branch}] ${count} new commit${count === 1 ? "" : "s"}`,
         url: payload.compare,
         description: commits.join("\n"),
-        color: COLORS.commit,
+        color: COLORS.info,
     };
 }
 
 function createEmbed(payload: GithubCreate): DiscordEmbedType {
     return {
-        author: { name: payload.sender.login, url: payload.sender.html_url, icon_url: payload.sender.avatar_url },
+        author: senderAuthor(payload.sender),
         title: `[${payload.repository.full_name}] New ${payload.ref_type} created: ${payload.ref}`,
     };
 }
@@ -69,7 +62,7 @@ function releaseEmbed(payload: GithubRelease): DiscordEmbedType | null {
     if (payload.action !== "published") return null;
 
     return {
-        author: { name: payload.sender.login, url: payload.sender.html_url, icon_url: payload.sender.avatar_url },
+        author: senderAuthor(payload.sender),
         title: `[${payload.repository.full_name}] New release published: ${payload.release.tag_name}`,
         url: payload.release.html_url,
     };
