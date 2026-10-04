@@ -18,6 +18,7 @@ const schema = z.object({
   LOGGER: z.stringbool().default(true),
 
   GITHUB_WEBHOOK_SECRET: z.string().min(1),
+  COOLIFY_WEBHOOK_SECRET: z.string().min(32), // part of the URL, must be unguessable
   DISCORD_WEBHOOK_SECRET: z.url(),
 
   RATE_LIMIT_MAX: z.coerce.number().int().positive().default(30),
