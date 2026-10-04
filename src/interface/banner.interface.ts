@@ -1,5 +1,5 @@
 const banner = `
-  your ascii banner here                                      
+  your ascii banner here                                 
 `;
 
 export function BANNER() {
