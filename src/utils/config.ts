@@ -14,9 +14,14 @@ const schema = z.object({
     .positive()
     .max(65535)
     .default(3000),
-    
+
+  LOGGER: z.stringbool().default(true),
+
   GITHUB_WEBHOOK_SECRET: z.string().min(1),
   DISCORD_WEBHOOK_SECRET: z.url(),
+
+  RATE_LIMIT_MAX: z.coerce.number().int().positive().default(30),
+  RATE_LIMIT_WINDOW: z.coerce.number().int().positive().default(60000), // ms
 });
 
 const parsed = schema.safeParse(process.env);
