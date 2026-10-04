@@ -15,7 +15,7 @@ await CORE.register(rateLimit, {
 })
 
 CORE.setNotFoundHandler({ preHandler: CORE.rateLimit() }, (_request, reply) => {
-    reply.code(404).send({ error: "Not Found" });
+    reply.code(404).send();
 })
 
 // MODULES
