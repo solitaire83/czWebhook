@@ -14,6 +14,10 @@ await CORE.register(rateLimit, {
     timeWindow: config.RATE_LIMIT_WINDOW
 })
 
+CORE.setNotFoundHandler({ preHandler: CORE.rateLimit() }, (_request, reply) => {
+    reply.code(404).send({ error: "Not Found" });
+})
+
 // MODULES
 CORE.register(MainRouter);
 
