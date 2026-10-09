@@ -10,9 +10,22 @@ export function verifyCoolifyToken(token: string): boolean {
 }
 
 export async function handleCoolify(payload: CoolifyEvent) {
-    if (payload.event !== "deployment_success" && payload.event !== "deployment_failed") return;
+    let embed: DiscordEmbedType | null = null;
 
-    await SendDiscordEmbed(deploymentEmbed(payload));
+    switch (payload.event) {
+        case "deployment_success":
+        case "deployment_failed": embed = deploymentEmbed(payload); break;
+        case "test": embed = testEmbed(payload); break;
+    }
+
+    if (embed) await SendDiscordEmbed(embed);
+}
+
+function testEmbed(payload: CoolifyEvent): DiscordEmbedType {
+    return {
+        title: `[coolify] ${payload.message}`,
+        color: COLORS.info,
+    };
 }
 
 function deploymentEmbed(payload: CoolifyEvent): DiscordEmbedType {
