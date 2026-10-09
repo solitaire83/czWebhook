@@ -1,11 +1,12 @@
 {
-  "name": "whnotify",
-  "version": "1.1.0",
+  "name": "czWebhook",
+  "version": "1.2.0",
   "description": "webhook something",
   "scripts": {
     "dev": "tsx watch main.ts",
     "build": "tsc",
-    "start": "node dist/main.js"
+    "start": "node dist/main.js",
+    "tw": "tsx tests/__webhook.test.ts"
   },
   "keywords": [],
   "author": "solitaire83",
