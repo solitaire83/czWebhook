@@ -6,5 +6,4 @@ export type CoolifyEvent = {
     message: string;
     application_name?: string;
     environment?: string;
-    deployment_url?: string;
 };
