@@ -5,7 +5,8 @@
   "scripts": {
     "dev": "tsx watch main.ts",
     "build": "tsc",
-    "start": "node dist/main.js"
+    "start": "node dist/main.js",
+    "tw": "tsx tests/__webhook.test.ts"
   },
   "keywords": [],
   "author": "solitaire83",
