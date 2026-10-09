@@ -15,15 +15,15 @@ export async function handleCoolify(payload: CoolifyEvent) {
     switch (payload.event) {
         case "deployment_success":
         case "deployment_failed": embed = deploymentEmbed(payload); break;
-        case "test": embed = testEmbed(payload); break;
+        case "test": embed = testEmbed(); break;
     }
 
     if (embed) await SendDiscordEmbed(embed);
 }
 
-function testEmbed(payload: CoolifyEvent): DiscordEmbedType {
+function testEmbed(): DiscordEmbedType {
     return {
-        title: `[coolify] ${payload.message}`,
+        title: "[WEBHOOK] The Webhook is working properly",
         color: COLORS.info,
     };
 }
