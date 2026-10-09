@@ -22,7 +22,6 @@ function deploymentEmbed(payload: CoolifyEvent): DiscordEmbedType {
 
     return {
         title: `[${name}] Deployment ${status}${environment}`,
-        url: payload.deployment_url && URL.canParse(payload.deployment_url) ? payload.deployment_url : undefined,
         color: payload.success ? COLORS.success : COLORS.failure,
     };
 }
